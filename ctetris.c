@@ -54,9 +54,6 @@ static int havemodes = 0;
 #define KEY_PAUSE  4
 #define KEY_QUIT   5
 
-#define HIGH_SCORE_FILE "/var/games/tetris.scores"
-#define TEMP_SCORE_FILE "/tmp/tetris-tmp.scores"
-
 char *keys = DEFAULT_KEYS;
 int level = 1;
 int points = 0;
@@ -148,7 +145,8 @@ int update(void)
 		printf("Keys:");
 		fflush(stdout);
 
-		return getchar();
+		char ch = getchar();
+		return ch;
 }
 
 int fits_in(int *shape, int pos)
@@ -176,31 +174,6 @@ int *next_shape(void)
 				return next_shape();
 
 		return next;
-}
-
-void show_high_score(void)
-{
-#ifdef ENABLE_HIGH_SCORE
-		FILE *tmpscore;
-
-		if ((tmpscore = fopen(HIGH_SCORE_FILE, "a"))) {
-				char *name = getenv("LOGNAME");
-
-				if (!name)
-						name = "anonymous";
-
-				fprintf(tmpscore, "%7d\t %5d\t  %3d\t%s\n", points * level, points, level, name);
-				fclose(tmpscore);
-
-				system("cat " HIGH_SCORE_FILE "| sort -rn | head -10 >" TEMP_SCORE_FILE
-								"&& cp " TEMP_SCORE_FILE " " HIGH_SCORE_FILE);
-				remove(TEMP_SCORE_FILE);
-		}
-
-		//	puts("\nHit RETURN to see high scores, ^C to skip.");
-		fprintf(stderr, "  Score\tPoints\tLevel\tName\n");
-		system("cat " HIGH_SCORE_FILE);
-#endif /* ENABLE_HIGH_SCORE */
 }
 
 void show_online_help(void)
@@ -377,7 +350,6 @@ int run()
 								textattr(RESETATTR);
 
 								printf("Your score: %d points x level %d = %d\n\n", points, level, points * level);
-								show_high_score();
 								break;
 						}
 
