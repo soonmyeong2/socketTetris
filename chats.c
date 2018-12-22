@@ -125,6 +125,7 @@ void ProcessClient(int id)
 				send(Client[id].sockfd, dot, strlen(dot)+1, 0);
 				sleep(1);
 		}
+		send(Client[id].sockfd, "go", 3, 0);
 
 		while (1)  {
 				if ((n = recv(Client[id].sockfd, buf, MAX_BUF, 0)) < 0)  {
@@ -140,7 +141,7 @@ void ProcessClient(int id)
 						pthread_mutex_unlock(&Mutex);
 
 						strcpy(buf, "log-out.....\n");
-						SendToAllClients(buf);
+//						SendToAllClients(buf);
 
 						pthread_exit(NULL);
 				}
