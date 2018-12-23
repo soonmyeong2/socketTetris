@@ -193,7 +193,7 @@ void CloseServer(int signo)
 				exit(1);
 		}
 
-		printf("\nChat server terminated.....\n");
+		printf("\nserver terminated.....\n");
 
 		exit(0);
 }
@@ -232,7 +232,7 @@ void main(int argc, char *argv[])
 
 		listen(Sockfd, 5);
 
-		printf("Chat server started.....\n");
+		printf("server started.....\n");
 
 		cliAddrLen = sizeof(cliAddr);
 		while (1)  {
