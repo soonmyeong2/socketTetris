@@ -30,6 +30,7 @@ char			score[MAX_BUF];
 
 ClientType		Client[MAX_CLIENT];
 
+// 접속 중인 유저 수를 계산
 int GetUserNumber()
 {
 		int	i;
@@ -43,6 +44,7 @@ int GetUserNumber()
 		return count;
 }
 
+// 유저의 아이디를 계산
 int GetID()
 {
 		int	i;
@@ -55,6 +57,7 @@ int GetID()
 		}
 }
 
+// 모든 클라이언트에게 buf 메세지 전송
 void SendToAllClients(char *buf)
 {
 		int		i;
@@ -79,6 +82,7 @@ void SendToAllClients(char *buf)
 }
 
 
+// 실제 클라이언트에게 제공되는 서버의 서비스
 void ProcessClient(int id)
 {
 		char	buf[MAX_BUF];
@@ -109,6 +113,7 @@ void ProcessClient(int id)
 				sleep(1);
 		}
 
+		// 게임 대기 시그널
 		char msg_c[50] = "\nStart the game ..";
 		if (send(Client[id].sockfd, msg_c, strlen(msg_c)+1, 0)<0){
 				perror("send");
@@ -144,6 +149,7 @@ void ProcessClient(int id)
 						pthread_exit(NULL);
 				}
 
+				// 맨 앞 s문자는 게임 종료 후 점수 시그널. 파일로 저장후 랭킹 다시 클라이언트엑 전송
 				if(buf[0] == 's')
 				{
 						pthread_mutex_lock(&fileMutex);
@@ -192,6 +198,7 @@ void CloseServer(int signo)
 		exit(0);
 }
 
+// 접속 요청 받는 메인
 void main(int argc, char *argv[])
 {
 		int					newSockfd, cliAddrLen, id, one = 1;

@@ -169,6 +169,7 @@ int update(void)
 
 }
 
+// 제공되는 범위 안에 블록이 로테이션 할수 있는지 체크하는 함수
 int fits_in(int *shape, int pos)
 {
 		if (board[pos] || board[pos + shape[1]] || board[pos + shape[2]] || board[pos + shape[3]])
@@ -176,6 +177,7 @@ int fits_in(int *shape, int pos)
 
 		return 1;
 }
+
 
 void place(int *shape, int pos, int b)
 {
@@ -265,6 +267,7 @@ void alarm_handler(int signo)
 		if (!signo)
 				h[3] = 200000;
 
+		// 레벨마다 설정
 		h[3] -= h[3] / (3000 - 10 * level);
 		setitimer(0, (struct itimerval *)h, 0);
 }
@@ -376,6 +379,7 @@ int run()
 				if (c == keys[KEY_PAUSE] || c == keys[KEY_QUIT]) {
 						freeze(1);
 
+						//게임 종료 시
 						if (c == keys[KEY_QUIT]) {
 								clrscr();
 								gotoxy(0, 0);
@@ -491,7 +495,7 @@ void CloseClient(int signo)
 		exit(0);
 }
 
-
+// 서버와 접속만 시켜주고 클라이언트 일 함
 void main(int argc, char *argv[])
 {
 		struct sockaddr_in	servAddr;
