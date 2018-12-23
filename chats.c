@@ -92,12 +92,6 @@ void ProcessClient(int id)
 				exit(1);
 		}
 
-		//if ((n = recv(Client[id].sockfd, Client[id].uid, MAX_ID, 0)) < 0)  {
-		//		perror("recv");
-		//		exit(1);
-		//}
-		//printf("Client %d log-in(ID: %s).....\n", id, Client[id].uid);
-		// 게임 중이 아니고 유저가 1명이면 대기
 		char	msg[MAX_BUF] = "Waiting for another user.";
 		if (send(Client[id].sockfd, msg, strlen(msg)+1, 0) < 0)  {
 				perror("send");
@@ -113,20 +107,24 @@ void ProcessClient(int id)
 				}
 				sleep(1);
 		}
-		// 게임 중이라면 대기
-		//if (inGame) {
-		//}
 
-		char msg_c[MAX_BUF] = "\nStart the game ..";
-		send(Client[id].sockfd, msg_c, strlen(msg_c)+1, 0);
+		char msg_c[50] = "\nStart the game ..";
+		if (send(Client[id].sockfd, msg_c, strlen(msg_c)+1, 0)<0){
+				perror("send");
+				exit(1);
+		}
 		for (int k=5; k>0; k--) {
 				char dot[10];
 				sprintf(dot, " %d ..", k);
-				send(Client[id].sockfd, dot, strlen(dot)+1, 0);
+				if(send(Client[id].sockfd, dot, strlen(dot)+1, 0)<0) {
+						perror("send");
+						exit(1);
+				}
 				sleep(1);
 		}
 		send(Client[id].sockfd, "go", 3, 0);
-
+		sleep(1);
+		SendToAllClients("go");
 		while (1)  {
 				if ((n = recv(Client[id].sockfd, buf, MAX_BUF, 0)) < 0)  {
 						perror("recv");
@@ -141,7 +139,6 @@ void ProcessClient(int id)
 						pthread_mutex_unlock(&Mutex);
 
 						strcpy(buf, "log-out.....\n");
-//						SendToAllClients(buf);
 
 						pthread_exit(NULL);
 				}

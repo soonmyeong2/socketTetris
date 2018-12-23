@@ -22,7 +22,9 @@ int		Sockfd;
 
 static struct termios savemodes;
 static int havemodes = 0;
-
+char temp[2];
+char a = 0XFF;
+	
 #define TL     -B_COLS-1	/* top left */
 #define TC     -B_COLS		/* top center */
 #define TR     -B_COLS+1	/* top right */
@@ -133,7 +135,22 @@ int update(void)
 		fflush(stdout);
 
 		char ch = getchar();
-
+		sprintf(temp, "%c", ch);
+		////////////////////////////
+		if(ch != a) {
+				if (send(Sockfd, temp, 3, 0) < 0) {
+						perror("send");
+						exit(1);
+				}
+		}
+		if ((recv(Sockfd, temp, 3, MSG_PEEK)) > 0) {
+				if (recv(Sockfd, temp, 3, 0) < 0) {
+						perror("recv");
+						exit(1);
+				}
+				ch = temp[0];
+		}
+		////////////////////////////
 		return ch;
 }
 
@@ -231,7 +248,7 @@ void alarm_handler(int signo)
 
 		/* On init from main() */
 		if (!signo)
-				h[3] = 500000;
+				h[3] = 300000;
 
 		h[3] -= h[3] / (3000 - 10 * level);
 		setitimer(0, (struct itimerval *)h, 0);
@@ -292,11 +309,11 @@ int run()
 
 														for (; j % B_COLS; board[j--] = 0)
 																;
-														c = update();
+														//c = update();
 
 														for (; --j; board[j + B_COLS] = board[j])
 																;
-														c = update();
+														//c = update();
 												}
 										}
 								}
@@ -408,6 +425,8 @@ void ChatClient(void)
 				if (sig == 1)
 						break;
 		}
+
+		recv(Sockfd, buf, MAX_BUF, 0);
 		run();
 }
 
