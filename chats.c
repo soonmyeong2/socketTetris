@@ -24,8 +24,9 @@ typedef	struct  {
 }ClientType;
 
 int				Sockfd;
-pthread_mutex_t	Mutex;
+pthread_mutex_t	Mutex, fileMutex;
 int 			inGame = 0;
+char			score[MAX_BUF];
 
 ClientType		Client[MAX_CLIENT];
 
@@ -60,10 +61,10 @@ void SendToAllClients(char *buf)
 		char	msg[MAX_BUF+MAX_ID];
 
 		sprintf(msg, "%s", buf);
-#ifdef	DEBUG
+//#ifdef	DEBUG
 		printf("%s", msg);
 		fflush(stdout);
-#endif
+//#endif
 
 		pthread_mutex_lock(&Mutex);
 		for (i = 0 ; i < MAX_CLIENT ; i++)  {
@@ -141,6 +142,20 @@ void ProcessClient(int id)
 						strcpy(buf, "log-out.....\n");
 
 						pthread_exit(NULL);
+				}
+
+				if(buf[0] == 's')
+				{
+						pthread_mutex_lock(&fileMutex);
+						FILE *fp = fopen("score.txt", "a");
+						fwrite(buf, strlen(buf), 1, fp);
+						fclose(fp);
+						FILE *ff = fopen("score.txt", "r");
+						fgets(score, sizeof(score), ff);
+						send(Client[id].sockfd, score, strlen(score)+1, 0);
+						fclose(ff);
+						pthread_mutex_unlock(&fileMutex);
+						
 				}
 
 				SendToAllClients(buf);

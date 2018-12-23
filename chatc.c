@@ -25,7 +25,8 @@ static struct termios savemodes;
 static int havemodes = 0;
 char temp[2];
 char a = 0XFF;
-	
+char score[MAX_BUF];
+
 #define TL     -B_COLS-1	/* top left */
 #define TC     -B_COLS		/* top center */
 #define TR     -B_COLS+1	/* top right */
@@ -146,26 +147,26 @@ int update(void)
 		char ch = getchar();
 		pthread_t  tid;
 		if(flag) {
-		sprintf(temp, "%c", ch);
-		////////////////////////////
-		if(ch != a) {
-				pthread_create(&tid, NULL, (void*)timer3,NULL);
-				if (send(Sockfd, temp, 3, 0) < 0) {
-						perror("send");
-						exit(1);
+				sprintf(temp, "%c", ch);
+				////////////////////////////
+				if(ch != a) {
+						pthread_create(&tid, NULL, (void*)timer3,NULL);
+						if (send(Sockfd, temp, 3, 0) < 0) {
+								perror("send");
+								exit(1);
+						}
 				}
-		}
-		if ((recv(Sockfd, temp, 3, MSG_PEEK)) > 0) {
-				if (recv(Sockfd, temp, 3, 0) < 0) {
-						perror("recv");
-						exit(1);
+				if ((recv(Sockfd, temp, 3, MSG_PEEK)) > 0) {
+						if (recv(Sockfd, temp, 3, 0) < 0) {
+								perror("recv");
+								exit(1);
+						}
+						ch = temp[0];
 				}
-				ch = temp[0];
-		}
-		return ch;
+				return ch;
 		}
 		/////////////////////////////
- 
+
 }
 
 int fits_in(int *shape, int pos)
@@ -287,6 +288,18 @@ int sig_init(void)
 		alarm_handler(0);
 }
 
+void sortInt(int number[], int num) {
+int temp;
+for(int i = 0 ; i < num-1 ; i ++) {
+		for(int j = i+1 ; j < num ; j ++) {
+				if(number[i] < number[j]) {
+						temp = number[j];
+						number[j] = number[i];
+						number[i] = temp;
+				}
+		}
+}
+}
 int run()
 {
 		int c = 0, i, j, *ptr;
@@ -369,6 +382,31 @@ int run()
 								textattr(RESETATTR);
 
 								printf("Your score: %d points x level %d = %d\n\n", points, level, points * level);
+								sprintf(score, "s%d", points*level);
+								send(Sockfd, score, strlen(score)+1, 0);
+								recv(Sockfd, score, MAX_BUF, 0);
+
+
+								int scoreNum[50], j = 0;
+								char *ptr = strtok(score, "s");
+
+								while(ptr != NULL)
+								{
+										scoreNum[j] = atoi(ptr);
+										ptr = strtok(NULL, "s");
+										j++;
+								}
+
+								sortInt(scoreNum, j);
+								
+								
+								printf("     score board\n");
+								for(int i=0; i<j; i++)
+								{
+										printf("%d: %d\n", i+1, scoreNum[i]);
+								}
+
+
 								break;
 						}
 
