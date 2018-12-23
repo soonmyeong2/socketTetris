@@ -12,6 +12,7 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <ctype.h>
+#include <pthread.h>
 #include "chat.h"
 
 #define	MAX_BUF		256
@@ -43,6 +44,7 @@ char a = 0XFF;
 #define KEY_PAUSE  4
 #define KEY_QUIT   5
 
+int flag=1;
 char *keys = DEFAULT_KEYS;
 int level = 1;
 int points = 0;
@@ -73,6 +75,13 @@ int shapes[] = {
 		5, TC, BC, BL,
 		6, TC, BC,  2 * B_COLS, /* sticks out */
 };
+
+void timer3(void)
+{
+		flag=0;
+		usleep(1000*310);
+		flag=1;
+}
 
 int update(void)
 {
@@ -135,9 +144,12 @@ int update(void)
 		fflush(stdout);
 
 		char ch = getchar();
+		pthread_t  tid;
+		if(flag) {
 		sprintf(temp, "%c", ch);
 		////////////////////////////
 		if(ch != a) {
+				pthread_create(&tid, NULL, (void*)timer3,NULL);
 				if (send(Sockfd, temp, 3, 0) < 0) {
 						perror("send");
 						exit(1);
@@ -150,8 +162,10 @@ int update(void)
 				}
 				ch = temp[0];
 		}
-		////////////////////////////
 		return ch;
+		}
+		/////////////////////////////
+ 
 }
 
 int fits_in(int *shape, int pos)
@@ -248,7 +262,7 @@ void alarm_handler(int signo)
 
 		/* On init from main() */
 		if (!signo)
-				h[3] = 300000;
+				h[3] = 200000;
 
 		h[3] -= h[3] / (3000 - 10 * level);
 		setitimer(0, (struct itimerval *)h, 0);
@@ -369,7 +383,7 @@ int run()
 				}
 
 				place(shape, pos, 7);
-				c = update();
+				c = update();	
 				place(shape, pos, 0);
 		}
 

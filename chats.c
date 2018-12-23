@@ -131,7 +131,7 @@ void ProcessClient(int id)
 						exit(1);
 				}
 				if (n == 0)  {
-						printf("Client %d log-out(ID: %s).....\n", id, Client[id].uid);
+						printf("Client %d log-out.....\n", id);
 
 						pthread_mutex_lock(&Mutex);
 						close(Client[id].sockfd);
