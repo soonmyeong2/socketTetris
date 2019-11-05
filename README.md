@@ -1,13 +1,14 @@
-The Tetris source code is here https://github.com/troglobit/tetris.
-
 This code is an online collaboratin-tetris based on Linux socket communication.
 
 
-## ¼³¸í
+## ì„¤ëª…
 
-* ¸®´ª½º ±â¹İÀ¸·Î ÇÑ ¼ÒÄÏ ÇÁ·Î±×·¡¹Ö, IPC, syncronazation, File I/O ±â¹ıÀ». ÀûÀıÈ÷ »ç¿ëÇÏ¿© Tetris°ÔÀÓÀ» Á¦ÀÛÇÑ´Ù.
-* Tetris°ÔÀÓÀ» ¿©·¯ Å¬¶óÀÌ¾ğÆ®µéÀÌ °°Àº mapÀ¸·Î collaborationÇü½ÄÀ¸·Î °ÔÀÓÀ» ÁøÇàÇÏ¿© Á¡¼ö¸¦ ½×°í, Á¡¼ö¸¦ ¾òÀ¸¸é ·©Å·ÀÌ ¸î À§ÀÎÁö ¾Ë ¼ö ÀÖ°Ô ÇÑ´Ù.
+* ë¦¬ëˆ…ìŠ¤ ê¸°ë°˜ìœ¼ë¡œ í•œ ì†Œì¼“ í”„ë¡œê·¸ë˜ë°, IPC, syncronazation, File I/O ì‚¬ìš©í•œ Tetrisê²Œì„
+* Tetrisê²Œì„ì„ ì—¬ëŸ¬ í´ë¼ì´ì–¸íŠ¸ë“¤ì´ ê°™ì€ mapìœ¼ë¡œ collaborationí˜•ì‹ìœ¼ë¡œ ê²Œì„ì„ ì§„í–‰í•˜ì—¬ ì ìˆ˜ë¥¼ ìŒ“ê³ , ì ìˆ˜ë¥¼ ì–»ìœ¼ë©´ ë­í‚¹ì´ ëª‡ ìœ„ì¸ì§€ ì•Œ ìˆ˜ ìˆìŒ.
 
-## ÁøÇà ¿µ»ó 
+## ì§„í–‰ ì˜ìƒ 
 
 ![screenshot](https://user-images.githubusercontent.com/38336997/51822435-ab83a300-231f-11e9-96c6-8ce98fb5740f.gif)
+
+
+The Tetris source code is here https://github.com/troglobit/tetris.
